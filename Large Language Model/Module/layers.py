@@ -406,12 +406,13 @@ class CausalLM(nn.Module):
                  device,
                  ):
         super().__init__()
-
+        self.embedding = WordEmbedding(vocab_size, d_model)
         self.blocks = nn.ModuleList([LMBlock(d_model, hidden_size, head_num, group_num, device) for _ in range(block_num)])
         self.output = nn.Linear(d_model, vocab_size)
 
     def forward(self, x):
 
+        x = self.embedding(x)
         for block in self.blocks:
             x = block(x)
 
